@@ -1,0 +1,108 @@
+erDiagram
+    CLIENTE ||--o| CLIENTE_PF : "e PF"
+    CLIENTE ||--o| CLIENTE_PJ : "e PJ"
+    CLIENTE ||--o{ PEDIDO : realiza
+    CLIENTE ||--o{ FORMA_PAGAMENTO : cadastra
+    PEDIDO ||--|{ ITEM_PEDIDO : inclui
+    PRODUTO ||--o{ ITEM_PEDIDO : compoe
+    PEDIDO ||--o{ PAGAMENTO : recebe
+    FORMA_PAGAMENTO ||--o{ PAGAMENTO : utilizada_em
+    PEDIDO ||--o| ENTREGA : possui
+    FORNECEDOR ||--o{ PRODUTO_FORNECEDOR : fornece
+    PRODUTO ||--o{ PRODUTO_FORNECEDOR : fornecido_por
+    VENDEDOR_TERCEIRO ||--o{ PRODUTO_VENDEDOR : vende
+    PRODUTO ||--o{ PRODUTO_VENDEDOR : anunciado_por
+    ESTOQUE ||--o{ PRODUTO_ESTOQUE : armazena
+    PRODUTO ||--o{ PRODUTO_ESTOQUE : disponivel_em
+
+    CLIENTE {
+        bigint id_cliente PK
+        varchar nome
+        varchar email UK
+        varchar telefone
+        char tipo_cliente "PF ou PJ"
+    }
+    CLIENTE_PF {
+        bigint id_cliente PK,FK
+        char cpf UK
+        date data_nascimento
+    }
+    CLIENTE_PJ {
+        bigint id_cliente PK,FK
+        char cnpj UK
+        varchar razao_social
+        varchar nome_fantasia
+    }
+    PEDIDO {
+        bigint id_pedido PK
+        bigint id_cliente FK
+        date data_pedido
+        varchar status_pedido
+        decimal valor_total
+    }
+    ITEM_PEDIDO {
+        bigint id_pedido PK,FK
+        bigint id_produto PK,FK
+        int quantidade
+        decimal preco_unitario
+    }
+    PRODUTO {
+        bigint id_produto PK
+        varchar nome
+        text descricao
+        decimal preco
+        varchar categoria
+    }
+    FORMA_PAGAMENTO {
+        bigint id_forma_pagamento PK
+        bigint id_cliente FK
+        varchar tipo
+        varchar identificador_mascarado
+        varchar token_referencia
+    }
+    PAGAMENTO {
+        bigint id_pagamento PK
+        bigint id_cliente FK
+        bigint id_pedido FK
+        bigint id_forma_pagamento FK
+        decimal valor
+        date data_pagamento
+        varchar status_pagamento
+    }
+    ENTREGA {
+        bigint id_entrega PK
+        bigint id_pedido FK,UK
+        varchar status_entrega
+        varchar codigo_rastreio UK
+        varchar transportadora
+        date data_envio
+        date data_prevista
+        date data_entrega
+    }
+    FORNECEDOR {
+        bigint id_fornecedor PK
+        varchar razao_social
+        char cnpj UK
+    }
+    VENDEDOR_TERCEIRO {
+        bigint id_vendedor PK
+        varchar nome
+        varchar documento UK
+    }
+    ESTOQUE {
+        bigint id_estoque PK
+        varchar localizacao
+    }
+    PRODUTO_FORNECEDOR {
+        bigint id_produto PK,FK
+        bigint id_fornecedor PK,FK
+    }
+    PRODUTO_VENDEDOR {
+        bigint id_produto PK,FK
+        bigint id_vendedor PK,FK
+    }
+    PRODUTO_ESTOQUE {
+        bigint id_produto PK,FK
+        bigint id_estoque PK,FK
+        int quantidade
+    }
